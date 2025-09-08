@@ -1,0 +1,167 @@
+<html lang="en">
+<head>
+    <style>
+        /* Animation for container fade-in */
+        .orecacu-container {
+            animation: fadeIn 1.1s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        /* Button press animation */
+        .orecacu-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px #b6c6e6;
+        }
+        /* Display flash animation on calculation */
+        .orecacu-display.flash {
+            animation: flashResult 0.35s;
+        }
+        @keyframes flashResult {
+            0% { background: #f7d358; }
+            100% { background: #f4f8fb; }
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORECACU Calculator</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0eafc, #cfdef3);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .orecacu-container {
+            max-width: 340px;
+            margin: 60px auto;
+            padding: 32px 28px 24px 28px;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 8px 32px rgba(60, 90, 130, 0.18);
+            border: 1px solid #e3e3e3;
+        }
+        .orecacu-title {
+            text-align: center;
+            font-size: 2.1em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #2d3a4b;
+            margin-bottom: 18px;
+        }
+        .orecacu-display {
+            width: 100%;
+            font-size: 1.4em;
+            margin-bottom: 18px;
+            padding: 10px 8px;
+            text-align: right;
+            border: none;
+            background: #f4f8fb;
+            border-radius: 7px;
+            color: #2d3a4b;
+            box-shadow: 0 1px 2px #e0eafc;
+        }
+        .orecacu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .orecacu-btn {
+            padding: 16px 0;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 6px;
+            background: #e0eafc;
+            color: #2d3a4b;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+        .orecacu-btn:hover {
+            background: #b6c6e6;
+            color: #1a2233;
+        }
+        .orecacu-btn.op {
+            background: #f7d358;
+            color: #7c5c00;
+        }
+        .orecacu-btn.op:hover {
+            background: #ffe082;
+        }
+        .orecacu-btn.eq {
+            background: #4fc3f7;
+            color: #fff;
+        }
+        .orecacu-btn.eq:hover {
+            background: #039be5;
+        }
+        .orecacu-btn.clear {
+            background: #f44336;
+            color: #fff;
+            grid-column: span 4;
+        }
+        .orecacu-btn.clear:hover {
+            background: #b71c1c;
+        }
+        @media (max-width: 400px) {
+            .orecacu-container { padding: 12px 2vw; }
+            .orecacu-title { font-size: 1.3em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="orecacu-container">
+        <div class="orecacu-title">ORECACU</div>
+        <input type="text" id="display" class="orecacu-display" disabled />
+        <div class="orecacu-grid">
+            <button class="orecacu-btn" onclick="press('7')">7</button>
+            <button class="orecacu-btn" onclick="press('8')">8</button>
+            <button class="orecacu-btn" onclick="press('9')">9</button>
+            <button class="orecacu-btn op" onclick="press('/')">÷</button>
+            <button class="orecacu-btn" onclick="press('4')">4</button>
+            <button class="orecacu-btn" onclick="press('5')">5</button>
+            <button class="orecacu-btn" onclick="press('6')">6</button>
+            <button class="orecacu-btn op" onclick="press('*')">×</button>
+            <button class="orecacu-btn" onclick="press('1')">1</button>
+            <button class="orecacu-btn" onclick="press('2')">2</button>
+            <button class="orecacu-btn" onclick="press('3')">3</button>
+            <button class="orecacu-btn op" onclick="press('-')">−</button>
+            <button class="orecacu-btn" onclick="press('0')">0</button>
+            <button class="orecacu-btn" onclick="press('.')">.</button>
+            <button class="orecacu-btn eq" onclick="calculate()">=</button>
+            <button class="orecacu-btn op" onclick="press('+')">+</button>
+            <button class="orecacu-btn clear" onclick="clearDisplay()">C</button>
+        </div>
+    </div>
+    <script>
+        let display = document.getElementById('display');
+        let current = '';
+        function press(val) {
+            if (display.value === 'Error') {
+                current = '';
+            }
+            current += val;
+            display.value = current;
+        }
+        function calculate() {
+            try {
+                // Replace division and multiplication symbols for eval
+                let expr = current.replace(/÷/g, '/').replace(/×/g, '*').replace(/−/g, '-');
+                current = eval(expr).toString();
+                display.value = current;
+                display.classList.remove('flash');
+                void display.offsetWidth; // trigger reflow
+                display.classList.add('flash');
+            } catch {
+                display.value = 'Error';
+                current = '';
+            }
+        }
+        function clearDisplay() {
+            current = '';
+            display.value = '';
+        }
+    </script>
+</body>
+</html>
